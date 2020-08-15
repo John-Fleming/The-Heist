@@ -30,12 +30,6 @@ namespace TheHeist
                 Console.WriteLine("Enter a team member's name:");
                 var teamMemberName = Console.ReadLine();
 
-                if (string.IsNullOrEmpty(teamMemberName))
-                {
-                    Console.WriteLine("Your Heist team is ready to go!");
-                    break;
-                }
-
                 Console.WriteLine("Enter the team member's skill level between 1 and 100:");
                 var teamMemberSkill = int.Parse(Console.ReadLine());
                 Console.WriteLine("Enter the team member's courage factor as a decimal between 0.0 and 2.0:");
@@ -43,20 +37,22 @@ namespace TheHeist
 
                 var teamMember = new TeamMember(teamMemberName, teamMemberSkill, teamMemberCourage);
                 team.Add(teamMember);
+
+                Console.WriteLine("Would you like to add another team member? (Enter y or n)");
+                var continueInput = Console.ReadLine();
+
+                if (continueInput == "n")
+                {
+                    Console.WriteLine("Your Heist team is ready to go!");
+                    break;
+                }
             }
 
             Console.WriteLine($"Team Size: {team.Count}\n");
-            Console.WriteLine("Commencing Bank Heist!");
 
-            //foreach (var member in team)
-            //{
-            //    Console.WriteLine(
-            //        $"Team Member Stats: \n" +
-            //        $"  Name: {member.Name} \n" +
-            //        $"  Skill: {member.Skill} \n" +
-            //        $"  Courage Factor: {member.CourageFactor}\n"
-            //        );
-            //}
+            Console.WriteLine("Enter how many times you want your team to attempt the heist:");
+            var heistAttempts = int.Parse(Console.ReadLine());
+            var attemptCount = 1;
 
             var bankDifficulty = 100;
             var teamSkillLevel = 0;
@@ -66,13 +62,31 @@ namespace TheHeist
                 teamSkillLevel += member.Skill;
             }
 
-            if (teamSkillLevel >= bankDifficulty)
+            while (attemptCount <= heistAttempts)
             {
-                Console.WriteLine("You're Rich! The bank stood no chance against your masterful heist!");
-            }
-            else
-            {
-                Console.WriteLine("Oh no! The bank security system was too good for your team! Run away!");
+                Console.WriteLine($"Commencing bank heist attempt {attemptCount}!\n");
+
+                var luckFactor = new Random().Next(-10, 10);
+                var adjustedBankDifficulty = bankDifficulty + luckFactor;
+
+                Console.WriteLine(
+                        $"Heist Attempt Stats: \n" +
+                        $"  Team Combined Skill: {teamSkillLevel} \n" +
+                        $"  Bank Difficulty Level: {bankDifficulty} \n" +
+                        $"  Luck Factor: {luckFactor} \n" +
+                        $"  Adjusted Bank Difficulty Level: {adjustedBankDifficulty} \n"
+                        );
+
+                if (teamSkillLevel >= adjustedBankDifficulty)
+                {
+                    Console.WriteLine("You're Rich! The bank stood no chance against your masterful heist!\n");
+                }
+                else
+                {
+                    Console.WriteLine("Oh no! The bank security system was too good for your team! Run away!\n");
+                }
+
+                attemptCount++;
             }
         }
 
